@@ -1,0 +1,392 @@
+{
+  "info": {
+    "name": "Blog API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "📝 Blog Operations",
+      "item": [
+        {
+          "name": "Create Draft Blog Post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.environment.set('draft_blog_id', response.data.blog._id);",
+                  "    console.log('Draft blog created with ID:', response.data.blog._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Advanced MongoDB Aggregation Pipelines\",\n    \"content\": \"MongoDB aggregation pipelines are powerful tools for data processing and analysis. This article will cover advanced techniques including $lookup, $facet, $group, and performance optimization strategies. We'll build complex queries step by step and explore real-world use cases.\",\n    \"tags\": [\"mongodb\", \"database\", \"aggregation\", \"nosql\"],\n    \"isPublished\": false\n}"
+            },
+            "url": {
+              "raw": "{{api_url}}/blogs",
+              "host": ["{{api_url}}"],
+              "path": ["blogs"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Published Blogs (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_url}}/blogs?page=1&limit=10",
+              "host": ["{{api_url}}"],
+              "path": ["blogs"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Blogs by Tag",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_url}}/blogs?tag=nodejs&page=1&limit=5",
+              "host": ["{{api_url}}"],
+              "path": ["blogs"],
+              "query": [
+                { "key": "tag", "value": "nodejs" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "5" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Blogs by Title",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_url}}/blogs?search=nodejs&page=1&limit=5",
+              "host": ["{{api_url}}"],
+              "path": ["blogs"],
+              "query": [
+                { "key": "search", "value": "nodejs" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "5" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Blogs (Author Only)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_url}}/blogs/my?page=1&limit=10",
+              "host": ["{{api_url}}"],
+              "path": ["blogs", "my"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Blog Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Getting Started with Node.js and Express - Updated\",\n    \"content\": \"Node.js is a powerful JavaScript runtime...\",\n    \"tags\": [\"nodejs\", \"express\", \"javascript\", \"backend\", \"tutorial\"],\n    \"isPublished\": true\n}"
+            },
+            "url": {
+              "raw": "{{api_url}}/blogs/{{blog_id}}",
+              "host": ["{{api_url}}"],
+              "path": ["blogs", "{{blog_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Publish Draft Blog",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"isPublished\": true\n}"
+            },
+            "url": {
+              "raw": "{{api_url}}/blogs/{{draft_blog_id}}",
+              "host": ["{{api_url}}"],
+              "path": ["blogs", "{{draft_blog_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Blog Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{api_url}}/blogs/{{blog_id}}",
+              "host": ["{{api_url}}"],
+              "path": ["blogs", "{{blog_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📊 Analytics & Reports",
+      "item": [
+        {
+          "name": "Get Blog Analytics (Admin Only)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_url}}/blogs/analytics",
+              "host": ["{{api_url}}"],
+              "path": ["blogs", "analytics"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🚫 Error Testing",
+      "item": [
+        {
+          "name": "Unauthorized Request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_url}}/blogs/my",
+              "host": ["{{api_url}}"],
+              "path": ["blogs", "my"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid Token",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "invalid_token_here",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_url}}/users/profile",
+              "host": ["{{api_url}}"],
+              "path": ["users", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reader Trying to Create Blog",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Unauthorized Blog Post\",\n    \"content\": \"This should fail if user is a reader\",\n    \"tags\": [\"test\"],\n    \"isPublished\": true\n}"
+            },
+            "url": {
+              "raw": "{{api_url}}/blogs",
+              "host": ["{{api_url}}"],
+              "path": ["blogs"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid Blog ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Updated Title\"\n}"
+            },
+            "url": {
+              "raw": "{{api_url}}/blogs/invalid_id_format",
+              "host": ["{{api_url}}"],
+              "path": ["blogs", "invalid_id_format"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Validation Error - Empty Title",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"\",\n    \"content\": \"This should fail due to empty title\",\n    \"tags\": [\"test\"],\n    \"isPublished\": true\n}"
+            },
+            "url": {
+              "raw": "{{api_url}}/blogs",
+              "host": ["{{api_url}}"],
+              "path": ["blogs"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
